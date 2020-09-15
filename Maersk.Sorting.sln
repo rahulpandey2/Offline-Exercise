@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maersk.Sorting.Api", "Maersk.Sorting.Api\Maersk.Sorting.Api.csproj", "{CEE29E7A-CE69-430C-8296-54122899538E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03B7AC6F-AE59-4B7F-963D-B0326CBB0354}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEE29E7A-CE69-430C-8296-54122899538E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE29E7A-CE69-430C-8296-54122899538E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE29E7A-CE69-430C-8296-54122899538E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE29E7A-CE69-430C-8296-54122899538E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE4C4D39-AC6E-4A0A-98DF-7510DC1A8DED}
+	EndGlobalSection
+EndGlobal
