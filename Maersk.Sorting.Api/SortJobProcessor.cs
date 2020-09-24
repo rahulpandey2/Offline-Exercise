@@ -30,15 +30,8 @@ namespace Maersk.Sorting.Api
             return sortJobList;
         }
 
-        public SortJob? GetOneJob(Guid guid)
-        {
-            string stringGuid = guid.ToString();
-            if(sortJobs.ContainsKey(stringGuid))
-            {
-                return sortJobs[stringGuid];
-            }
-            return null;
-        }
+
+
 
         public async Task<SortJob> Process(SortJob job)
         {
@@ -47,34 +40,7 @@ namespace Maersk.Sorting.Api
             var stopwatch = Stopwatch.StartNew();
 
             var output = job.Input.OrderBy(n => n).ToArray();
-            await Task.Delay(5000); // NOTE: This is just to simulate a more expensive operation
-
-            var duration = stopwatch.Elapsed;
-
-            _logger.LogInformation("Completed processing job with ID '{JobId}'. Duration: '{Duration}'.", job.Id, duration);
-
-            return new SortJob(
-                id: job.Id,
-                status: SortJobStatus.Completed,
-                duration: duration,
-                input: job.Input,
-                output: output);
-        }
-
-        //public async Task<SortJob> ProcessAsync(SortJob job)
-        //{
-        //    Task<SortJob> task = new Task<SortJob>(Sort(job));
-        //    return await Sort(job);
-        //}
-
-        private SortJob Sort(SortJob job)
-        {
-            _logger.LogInformation("Processing job with ID '{JobId}'.", job.Id);
-
-            var stopwatch = Stopwatch.StartNew();
-
-            var output = job.Input.OrderBy(n => n).ToArray();
-            Task.Delay(5000); // NOTE: This is just to simulate a more expensive operation
+            await Task.Delay(20000); // NOTE: This is just to simulate a more expensive operation
 
             var duration = stopwatch.Elapsed;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Maersk.Sorting.Api.Controllers
@@ -9,10 +10,12 @@ namespace Maersk.Sorting.Api.Controllers
     public class SortController : ControllerBase
     {
         private readonly ISortJobProcessor _sortJobProcessor;
+        private readonly IBackGroundProcessor _backGroundProcessor;
 
-        public SortController(ISortJobProcessor sortJobProcessor)
+        public SortController(ISortJobProcessor sortJobProcessor, IBackGroundProcessor backGroundProcessor)
         {
             _sortJobProcessor = sortJobProcessor;
+            _backGroundProcessor = backGroundProcessor;
         }
 
         [HttpPost("run")]
@@ -32,24 +35,21 @@ namespace Maersk.Sorting.Api.Controllers
         }
 
         [HttpPost]
-        public Task<ActionResult<SortJob>> EnqueueJob(int[] values)
+        public ActionResult<SortJob> EnqueueJob(int[] values)
         {
-            // TODO: Should enqueue a job to be processed in the background.
-            throw new NotImplementedException();
+            return _backGroundProcessor.PushInQueue(values);
         }
 
         [HttpGet]
-        public Task<ActionResult<SortJob[]>> GetJobs()
+        public ActionResult<List<SortJob>> GetJobs()
         {
-            // TODO: Should return all jobs that have been enqueued (both pending and completed).
-            throw new NotImplementedException();
+            return _backGroundProcessor.GetAllJobs();
         }
 
         [HttpGet("{jobId}")]
-        public Task<ActionResult<SortJob>> GetJob(Guid jobId)
+        public ActionResult<SortJob?> GetJob(Guid jobId)
         {
-            // TODO: Should return a specific job by ID.
-            throw new NotImplementedException();
+            return _backGroundProcessor.GetJob(jobId);
         }
     }
 }
