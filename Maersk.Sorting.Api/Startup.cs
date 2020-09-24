@@ -23,7 +23,7 @@ namespace Maersk.Sorting.Api
                 .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
             services.AddSingleton<ISortJobProcessor, SortJobProcessor>();
-            services.AddSingleton<IBackGroundProcessor, BackGroundProcessor>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
             services.AddSwaggerGen();
         }
 

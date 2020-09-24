@@ -10,12 +10,12 @@ namespace Maersk.Sorting.Api.Controllers
     public class SortController : ControllerBase
     {
         private readonly ISortJobProcessor _sortJobProcessor;
-        private readonly IBackGroundProcessor _backGroundProcessor;
+        private readonly IBackgroundTaskQueue _backGroundTaskQueue;
 
-        public SortController(ISortJobProcessor sortJobProcessor, IBackGroundProcessor backGroundProcessor)
+        public SortController(ISortJobProcessor sortJobProcessor, IBackgroundTaskQueue backGroundtaskQueue)
         {
             _sortJobProcessor = sortJobProcessor;
-            _backGroundProcessor = backGroundProcessor;
+            _backGroundTaskQueue = backGroundtaskQueue;
         }
 
         [HttpPost("run")]
@@ -37,19 +37,27 @@ namespace Maersk.Sorting.Api.Controllers
         [HttpPost]
         public ActionResult<SortJob> EnqueueJob(int[] values)
         {
-            return _backGroundProcessor.PushInQueue(values);
+            return _backGroundTaskQueue.PushInQueue(values);
         }
 
         [HttpGet]
         public ActionResult<List<SortJob>> GetJobs()
         {
-            return _backGroundProcessor.GetAllJobs();
+            return _backGroundTaskQueue.GetAllJobs();
         }
 
         [HttpGet("{jobId}")]
         public ActionResult<SortJob?> GetJob(Guid jobId)
         {
-            return _backGroundProcessor.GetJob(jobId);
+            return _backGroundTaskQueue.GetJob(jobId);
+        }
+
+        [HttpGet]
+        [Route("ResetQueue")]
+        public ActionResult ResetQueue()
+        {
+            _backGroundTaskQueue.ResetQueue();
+            return Ok("Queue cleared successfully");
         }
     }
 }

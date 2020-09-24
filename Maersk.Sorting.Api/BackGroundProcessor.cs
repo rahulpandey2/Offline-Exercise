@@ -8,44 +8,37 @@ using System.Threading.Tasks;
 
 namespace Maersk.Sorting.Api
 {
-    public class BackGroundProcessor : IBackGroundProcessor, IHostedService
+    public class BackGroundProcessor : IHostedService
     {
         private readonly ISortJobProcessor _sortJobProcessor;
-        private bool _runBackGroundProcess = true;
+        private bool _runBackGroundProcess;
+        private IServiceProvider _srvices;
+
         public BackGroundProcessor(ISortJobProcessor sortJobProcessor, IServiceProvider serviceProvider)
         {
             _sortJobProcessor = sortJobProcessor;
-            Services = serviceProvider;
-
-            Queue = new Dictionary<Guid, SortJob>();
-
+            _srvices = serviceProvider;
         }
-        public IServiceProvider Services { get; }
-
-
-        public Dictionary<Guid, SortJob> Queue { get; set; }
-
 
         private Task Process()
         {
-
-
-
             while (_runBackGroundProcess)
             {
-                Dictionary<Guid, SortJob>? queue = new Dictionary<Guid, SortJob>();
-                using (IServiceScope? scope = Services.CreateScope())
-                {
-                    IBackGroundProcessor? scopedProcessingService =
-                        scope.ServiceProvider
-                            .GetRequiredService<IBackGroundProcessor>();
+                var queue = new Dictionary<Guid, SortJob>();
 
-                    //await scopedProcessingService.DoWork(stoppingToken);
+                using (IServiceScope? scope = _srvices.CreateScope())
+                {
+                    var scopedProcessingService = scope.ServiceProvider
+                                                    .GetRequiredService<IBackgroundTaskQueue>();
+
                     queue = scopedProcessingService.Queue;
                 }
+
                 if (queue.Where(x => x.Value.Status == SortJobStatus.Pending).Any())
                 {
-                    KeyValuePair<Guid, SortJob> pendingJob = queue.Where(x => x.Value.Status == SortJobStatus.Pending).FirstOrDefault();
+                    KeyValuePair<Guid, SortJob> pendingJob = queue
+                                                .Where(x => x.Value.Status == SortJobStatus.Pending)
+                                                .FirstOrDefault();
 
                     if (pendingJob.Value is null)
                     {
@@ -59,40 +52,9 @@ namespace Maersk.Sorting.Api
                     Thread.Sleep(5000);
                 }
             }
+
             return Task.CompletedTask;
         }
-
-        public SortJob? GetJob(Guid guid)
-        {
-            return Queue.ContainsKey(guid) ? Queue[guid] : null;
-        }
-
-        public List<SortJob> GetAllJobs()
-        {
-            List<SortJob> sortJobList = new List<SortJob>();
-            if (Queue != null)
-            {
-                foreach (KeyValuePair<Guid, SortJob> entry in Queue)
-                {
-                    sortJobList.Add(entry.Value);
-                }
-            }
-            return sortJobList;
-        }
-
-        public SortJob PushInQueue(int[] values)
-        {
-            SortJob? pendingJob = new SortJob(
-                id: Guid.NewGuid(),
-                status: SortJobStatus.Pending,
-                duration: null,
-                input: values,
-                output: null);
-
-            Queue.Add(pendingJob.Id, pendingJob);
-            return pendingJob;
-        }
-
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
