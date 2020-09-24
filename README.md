@@ -1,4 +1,4 @@
-# Maersk Offline Exercise
+# Offline Exercise
 
 ## Introduction
 
