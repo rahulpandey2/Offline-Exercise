@@ -26,7 +26,7 @@ namespace Maersk.Sorting.Api
             {
                 var queue = new Dictionary<Guid, SortJob>();
 
-                using (IServiceScope? scope = _srvices.CreateScope())
+                using (IServiceScope scope = _srvices.CreateScope())
                 {
                     var scopedProcessingService = scope.ServiceProvider
                                                     .GetRequiredService<IBackgroundTaskQueue>();

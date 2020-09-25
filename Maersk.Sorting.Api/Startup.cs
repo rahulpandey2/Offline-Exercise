@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
-using Swashbuckle.AspNetCore.Swagger;
 namespace Maersk.Sorting.Api
 {
     public class Startup
@@ -35,7 +34,7 @@ namespace Maersk.Sorting.Api
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Maersk.Sorting.Api");
             });
 
             if (env.IsDevelopment())
